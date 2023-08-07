@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: u-bot-cronjob
 spec:
-  schedule: "0 * * * *"
+  schedule: "0 14 * * *"
   jobTemplate:
     spec:
       template:
