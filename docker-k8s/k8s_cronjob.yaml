@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: u-bot-cronjob
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: python-script-runner
+            image: 047544649573.dkr.ecr.us-west-2.amazonaws.com/u_bot_ecr
+            env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws-secret-access-key
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-credentials
+                  key: api-key
+            - name: API_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-credentials
+                  key: api-key-secret
+            - name: ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-credentials
+                  key: access-token
+            - name: ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-credentials
+                  key: access-token-secret
+          restartPolicy: OnFailure
+
+
