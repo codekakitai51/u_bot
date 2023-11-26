@@ -6,7 +6,7 @@ Enjoy exploring the bot and its tweets
 
 ## 🛠 Skills Used
 - **Language:** Python (Markov chain)
-- **Cloud Platform:** AWS (IAM, S3, ECR, EKS)
+- **Cloud Platform:** AWS (EC2, S3, ECR, EKS)
 - **Containerization & Orchestration:** Docker, Kubernetes
 
 ## 🐦 Bot's Twitter Handle
