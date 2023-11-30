@@ -2,6 +2,7 @@ import os
 import requests
 import re
 import MeCab
+from gcp_functions import download_blob, upload_blob, copy_blob, add_to_file
 
 # To set your environment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
@@ -59,17 +60,17 @@ def preprocess_wordcloud(doc):
     doc = re.sub(r"(^RT.*)", "", doc, flags=re.MULTILINE | re.DOTALL)
     return doc
 
-# log out to tweets.txt file
+# log out to temp-tweets.txt file
 def log_in_tweets_text(text):
-    with open("tweets.txt", "a+") as file:
+    with open("temp-tweets.txt", "a+") as file:
             file.seek(0)
             if text not in file.read():
                 file.write(text + "\n")
 
 # divide(wakachi) and make a new file
 def wakachi_division():   
-    input = open('./tweets.txt', 'r', encoding='utf-8') # original tweets data
-    output = open('./splitted.txt', 'w', encoding='utf-8') # sentences generated as Owatati
+    input = open('./temp-tweets.txt', 'r', encoding='utf-8') # original tweets data
+    output = open('./temp-splitted.txt', 'w', encoding='utf-8') # sentences generated as Owatati
 
     # using -d option to set the path of dictionary
     mecab = MeCab.Tagger("-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd/")
@@ -82,7 +83,6 @@ def wakachi_division():
     input.close()
     output.close()
 
-
 def main():
     url = create_url()
     params = get_params()
@@ -93,6 +93,19 @@ def main():
         log_in_tweets_text(text)
     
     wakachi_division()
+
+    # back up
+    copy_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "u-bot-bucket", "backup-tweets") 
+
+    download_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "tweets-wakatied.txt")
+
+    add_to_file("temp-splitted.txt", "tweets-wakatied.txt")
+
+    upload_blob("u-bot-bucket", "tweets-wakatied.txt", "gcp-tweets-wakatied.txt")
+
+
+
+    
 
 
 if __name__ == "__main__":

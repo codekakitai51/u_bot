@@ -1,16 +1,10 @@
 import os
-import boto3
 import markovify
 import tweepy
+from gcp_functions import download_blob
 
-# download file from AWS S3
-s3_client = boto3.client('s3',
-    aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-    region_name='us-west-2'  # specify your region
-)
-
-s3_client.download_file('splitedtextforubot', 'splitted.txt', 'splitted.txt')
+# download the file from GCP
+download_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "tweets-wakatied.txt")
 
 # fetch sentences from splitted.txt and generate a random sentence
 with open('splitted.txt', 'r', encoding='utf-8') as input_file:
