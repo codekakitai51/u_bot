@@ -1,3 +1,6 @@
 .DS_Store
 __pycache__
 google-cloud-sdk
+temp-splitted.txt
+temp-tweeets.txt
+tweets-wakatied.txt
