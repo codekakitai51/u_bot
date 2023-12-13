@@ -1,14 +1,8 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Use the Google Cloud SDK image as the base image
+FROM gcr.io/google.com/cloudsdktool/cloud-sdk:latest
 
-# Set the working directory in the container to /app
-WORKDIR /app
-
-# Copy the current directory contents into the container
-COPY . /app
-
-# Install MeCab and its dependencies
-RUN apt-get update && apt-get install -y mecab libmecab-dev mecab-ipadic-utf8 git make curl xz-utils file sudo
+# Install Python and other dependencies
+RUN apt-get update && apt-get install -y python3-pip python3-dev mecab libmecab-dev mecab-ipadic-utf8 git make curl xz-utils file sudo
 
 # Install neologd
 RUN git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git \
@@ -19,5 +13,11 @@ RUN git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git \
 ENV MECABRC /etc/mecabrc
 RUN sed -i '/dicdir =/d' $MECABRC && echo "dicdir = /usr/local/lib/mecab/dic/mecab-ipadic-neologd" >> $MECABRC
 
-# Install any needed packages
-RUN pip install boto3 markovify tweepy requests mecab-python3
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container
+COPY . /app
+
+# Install required Python packages
+RUN pip install boto3 markovify tweepy requests mecab-python3 google-cloud-storage

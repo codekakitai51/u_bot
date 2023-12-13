@@ -2,7 +2,7 @@ import os
 import requests
 import re
 import MeCab
-from gcp_functions import download_blob, upload_blob, copy_blob, add_to_file
+from gcp_functions import download_blob, upload_blob, copy_blob
 
 # To set your environment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
@@ -83,18 +83,33 @@ def wakachi_division():
     input.close()
     output.close()
 
+def add_to_file(source_file, destination_file):
+    # source_file の内容を destination_file に追加する
+
+    # source_file を読み込みモードで開く
+    with open(source_file, 'r') as source:
+        # 内容を読み込む
+        data = source.read()
+
+    # destination_file を追加モードで開く
+    with open(destination_file, 'a') as destination:
+        # 読み込んだデータを追加
+        destination.write(data)
+
 def main():
     url = create_url()
     params = get_params()
     json_response = connect_to_endpoint(url, params)
 
+    # fetch the latest 100 tweets and store in temp-tweets.txt 
     for each_data in json_response["data"]:
         text = preprocess_wordcloud(each_data["text"])
         log_in_tweets_text(text)
     
+    # wakachize and store in temp-splitted.txt
     wakachi_division()
 
-    # back up
+    # back up in cloud storage
     copy_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "u-bot-bucket", "backup-tweets") 
 
     download_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "tweets-wakatied.txt")
@@ -102,10 +117,6 @@ def main():
     add_to_file("temp-splitted.txt", "tweets-wakatied.txt")
 
     upload_blob("u-bot-bucket", "tweets-wakatied.txt", "gcp-tweets-wakatied.txt")
-
-
-
-    
 
 
 if __name__ == "__main__":

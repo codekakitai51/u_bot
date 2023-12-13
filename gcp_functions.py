@@ -28,19 +28,6 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
         )
     )
 
-def add_to_file(source_file, destination_file):
-    # source_file の内容を destination_file に追加する
-
-    # source_file を読み込みモードで開く
-    with open(source_file, 'r') as source:
-        # 内容を読み込む
-        data = source.read()
-
-    # destination_file を追加モードで開く
-    with open(destination_file, 'a') as destination:
-        # 読み込んだデータを追加
-        destination.write(data)
-
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
     # The ID of your GCS bucket

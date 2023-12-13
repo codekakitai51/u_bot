@@ -7,7 +7,7 @@ from gcp_functions import download_blob
 download_blob("u-bot-bucket", "gcp-tweets-wakatied.txt", "tweets-wakatied.txt")
 
 # fetch sentences from splitted.txt and generate a random sentence
-with open('splitted.txt', 'r', encoding='utf-8') as input_file:
+with open('tweets-wakatied.txt', 'r', encoding='utf-8') as input_file:
     model = markovify.NewlineText(input_file.read())
     sentence = model.make_sentence()
 # remove spaces because the sentence is generated as "-Owakati"
