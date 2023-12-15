@@ -7,7 +7,7 @@ To optimize costs and explore new learning opportunities, I migrated the infrast
 
 I implemented scheduled tasks for the Twitter bot using GKE's CronJobs:
 1. **fetch_tweets_cronjob**: Scheduled to run every Sunday night at midnight (Japan time).
-   - Utilizes the Twitter API to fetch the latest tweets (up to 100) from my own Twitter account.
+   - Utilizes the Twitter API to fetch the latest tweets (up to 100) from my friend’s Twitter account.
    - Appends the newly fetched tweets to the existing tweet data obtained from Google Storage.
    - Performs text preprocessing, including tokenization, to prepare the data for the Markov chain model.
 
